@@ -9,39 +9,60 @@ def main():
     board, size = build_GUI()
     x = evaluate(board, size)
     pboard(x[0], size, x[1])
-    # hill_climb(board, size)
+    hill_climb(board, size)
 
 
 def hill_climb(board, size):
-    x_vals = [(i+1) for i in range(50)]
+    x_vals = [(i+1) for i in range(200)]
     y_vals = []
     rand_y = size-1
     rand_x = size-1
     valfunc_og = evaluate(board, size)[1]
     valfunc_max = valfunc_og
-    final_board = []
 
     for i in range(len(x_vals)):
+        #does this belong here? (are we modifying the og board everytime?)
         new_board = board
-        for j in range(i):
-            while rand_x == size-1 and rand_y == size-1:
+
+        for j in range(i+1):
+            #pick random cell
+            while True:
                 rand_x = randint(0, size-1)
                 rand_y = randint(0, size-1)
 
+                if rand_x != size-1 and rand_y != size-1:
+                    break
+
+            #max legal move for that random cell
             max_move = max(size - (rand_x+1), rand_x, size - (rand_y+1), rand_y)
             old_cell = board[rand_x][rand_y]
-                
+            
+            #change cell then find new value function
             new_board[rand_x][rand_y] = randint(1, max_move)
             valfunc_new = evaluate(new_board, size)[1]
 
+            #if new val func > current max val func found so far, change max
+            #capture that new board to visualize later
             if valfunc_new < valfunc_og:
                 new_board[rand_x][rand_y] = old_cell
             elif valfunc_new > valfunc_max:
                 valfunc_max = valfunc_new
                 final_board = new_board
 
+
         y_vals.append(valfunc_max)
-        print(final_board)
+    
+    print('--------------------------')
+    print('Hill Climb Result:')
+    for i in range(size):
+        print(final_board[i])
+    print('value function is: ' + str(valfunc_max))
+
+    plt.plot(x_vals, y_vals)
+    plt.xlabel('number of iterations')
+    plt.ylabel('max value function')
+    plt.title('max value functions over # of iterations')
+    plt.show()
 
 
 def evaluate(board, size):
