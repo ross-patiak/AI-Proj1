@@ -8,7 +8,13 @@ import matplotlib.pyplot as plt
 def main():
     board, size = build_GUI()
     x = evaluate(board, size)
+
+    print('------------------------------------')
+    print('Cell Values Board')
     pboard(x[0], size, x[1])
+
+    print('------------------------------------')
+    print('Hill Climb Result:')
     hill_climb(board, size)
 
 
@@ -52,11 +58,7 @@ def hill_climb(board, size):
 
         y_vals.append(valfunc_max)
     
-    print('--------------------------')
-    print('Hill Climb Result:')
-    for i in range(size):
-        print(final_board[i])
-    print('value function is: ' + str(valfunc_max))
+    pboard(final_board, size, valfunc_max)
 
     plt.plot(x_vals, y_vals)
     plt.xlabel('number of iterations')
@@ -99,8 +101,6 @@ def evaluate(board, size):
         
 
 def pboard(board, size, val_func):
-    print('------------------------------------')
-    print('Cell Values Board')
     for i in range(size):
         print(board[i])
     print("value function is: ", val_func)
@@ -127,7 +127,7 @@ def build_GUI():
                 max_move = max(grid_size - (i+1), i, grid_size - (j+1), j)
                 grid[i][j] = randint(1, max_move)
 
-    print('Board')
+    print('Original Board')
     for i in range(grid_size):
         print(grid[i])
     
