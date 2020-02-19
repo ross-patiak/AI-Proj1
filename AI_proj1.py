@@ -21,8 +21,6 @@ def main():
 def hill_climb(board, size):
     x_vals = [(i+1) for i in range(200)]
     y_vals = []
-    rand_y = size-1
-    rand_x = size-1
     valfunc_og = evaluate(board, size)[1]
     valfunc_max = valfunc_og
 
@@ -54,7 +52,6 @@ def hill_climb(board, size):
             elif valfunc_new > valfunc_max:
                 valfunc_max = valfunc_new
                 final_board = new_board
-
 
         y_vals.append(valfunc_max)
     
