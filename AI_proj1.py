@@ -61,7 +61,7 @@ def hill_climb(board, size):
     pboard(final_board, size, valfunc_max)
 
     plt.plot(x_vals, y_vals)
-    plt.xlabel('number of iterations')
+    plt.xlabel('number of hill climb iterations')
     plt.ylabel('max value function')
     plt.title('max value functions over # of iterations')
     plt.show()
