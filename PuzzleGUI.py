@@ -9,15 +9,15 @@ def main():
 def hill_climb(board, size):
     x_vals = [(i+1) for i in range(50)]
     y_vals = []
-    rand_celly = size-1
-    rand_cellx= size-1
+    rand_y = size-1
+    rand_x= size-1
 
-    while rand_cellx == size-1 and rand_celly == size-1:
-        rand_cellx = randint(0, size-1)
-        rand_celly = randint(0, size-1)
+    while rand_x == size-1 and rand_y == size-1:
+        rand_x = randint(0, size-1)
+        rand_y = randint(0, size-1)
     
-    print(rand_cellx)
-    print(rand_celly)
+    print(rand_x)
+    print(rand_y)
 
 
     # for i in range(x_vals):
