@@ -10,7 +10,7 @@ def main():
     x = evaluate(board, size)
 
     print('------------------------------------')
-    print('Cell Values Board')
+    print('Cell Values Board:')
     pboard(x[0], size, x[1])
 
     print('------------------------------------')
@@ -124,7 +124,7 @@ def build_GUI():
                 max_move = max(grid_size - (i+1), i, grid_size - (j+1), j)
                 grid[i][j] = randint(1, max_move)
 
-    print('Original Board')
+    print('Original Board:')
     for i in range(grid_size):
         print(grid[i])
     
