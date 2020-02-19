@@ -16,8 +16,8 @@ def hill_climb(board, size):
         rand_x = randint(0, size-1)
         rand_y = randint(0, size-1)
     
-    print(rand_x)
-    print(rand_y)
+    max_move = max(size - (rand_x+1), rand_x, size - (rand_y+1), rand_y)
+    board[rand_x][rand_y] = randint(1, max_move)
 
 
     # for i in range(x_vals):
