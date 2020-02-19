@@ -67,7 +67,7 @@ def hill_climb(board, size):
 def evaluate(board, size):
     val_func = 0
     queue1 = queue.Queue(maxsize=0)
-    visited = [['X' for j in range(size)] for i in range(size)]
+    visited = [['X'] * size for i in range(size)]
     node_count = 0
     queue1.put((0, 0, node_count))
 
