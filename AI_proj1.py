@@ -16,20 +16,32 @@ def hill_climb(board, size):
     x_vals = [(i+1) for i in range(50)]
     y_vals = []
     rand_y = size-1
-    rand_x= size-1
+    rand_x = size-1
+    valfunc_og = evaluate(board, size)[1]
+    valfunc_max = valfunc_og
+    final_board = []
 
-    while rand_x == size-1 and rand_y == size-1:
-        rand_x = randint(0, size-1)
-        rand_y = randint(0, size-1)
-    
-    max_move = max(size - (rand_x+1), rand_x, size - (rand_y+1), rand_y)
-    board[rand_x][rand_y] = randint(1, max_move)
+    for i in range(len(x_vals)):
+        new_board = board
+        for j in range(i):
+            while rand_x == size-1 and rand_y == size-1:
+                rand_x = randint(0, size-1)
+                rand_y = randint(0, size-1)
 
+            max_move = max(size - (rand_x+1), rand_x, size - (rand_y+1), rand_y)
+            old_cell = board[rand_x][rand_y]
+                
+            new_board[rand_x][rand_y] = randint(1, max_move)
+            valfunc_new = evaluate(new_board, size)[1]
 
-    # for i in range(x_vals):
-    #     for j in range(i):
-    #         answer = i
-    #     y_vals.append()
+            if valfunc_new < valfunc_og:
+                new_board[rand_x][rand_y] = old_cell
+            elif valfunc_new > valfunc_max:
+                valfunc_max = valfunc_new
+                final_board = new_board
+
+        y_vals.append(valfunc_max)
+        print(final_board)
 
 
 def evaluate(board, size):
