@@ -30,7 +30,7 @@ def hill_climb(board, size):
                 rand_x = randint(0, size-1)
                 rand_y = randint(0, size-1)
 
-                if rand_x != size-1 and rand_y != size-1:
+                if not(rand_x == size-1 and rand_y == size-1):
                     break
 
             #max legal move for that random cell
