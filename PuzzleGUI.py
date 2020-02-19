@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def main():
     board, size = build_GUI()
-    hill_climb(board, size)
+    # hill_climb(board, size)
 
     
 def hill_climb(board, size):
