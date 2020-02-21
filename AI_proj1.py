@@ -39,9 +39,9 @@ def main():
     print('------------------------------------')
     print('Hill Climb Result on board size of 5:')
     board_collection, size, valfunc_max, x_vals, y_vals = hill_climb(board, grid_size, 50)
-    hillboard, val_func = board_collection[len(board_collection)-1]
-    pboard(hillboard, grid_size, val_func)
-    graphit(x_vals, y_vals)
+    #hillboard, val_func = board_collection[len(board_collection)-1]
+    #pboard(hillboard, grid_size, val_func)
+    #graphit(x_vals, y_vals)
 
     print(board_collection)
 """
@@ -95,7 +95,7 @@ def hill_climb(board, size, iterations):
 
     valfunc_og = evaluate(board, size)[1]
     valfunc_max = valfunc_og
-    board_collection = [[board, valfunc_max]]
+    board_collection = []
 
     for i in range(len(x_vals)):
         #does this belong here? (are we modifying the og board everytime?)
@@ -112,11 +112,13 @@ def hill_climb(board, size, iterations):
 
             #max legal move for that random cell
             max_move = max(size - (rand_x+1), rand_x, size - (rand_y+1), rand_y)
-            old_cell = board[rand_x][rand_y]
+            old_cell = new_board[rand_x][rand_y]
             
             #change cell then find new value function
             new_board[rand_x][rand_y] = randint(1, max_move)
             valfunc_new = evaluate(new_board, size)[1]
+
+            #pboard(new_board, size, valfunc_new)
 
             #if new val func > current max val func found so far, change max
             #capture that new board to visualize later
@@ -124,8 +126,12 @@ def hill_climb(board, size, iterations):
                 new_board[rand_x][rand_y] = old_cell
             elif valfunc_new > valfunc_max:
                 valfunc_max = valfunc_new
-                final_board = new_board
-                board_collection.append([final_board, valfunc_max])
+                final_board = new_board[:]
+                pboard(new_board, size, valfunc_new)
+                # board_collection.append((final_board, valfunc_max))
+                board_collection.append(final_board)
+
+                print(board_collection)
 
         y_vals.append(valfunc_max)
     
