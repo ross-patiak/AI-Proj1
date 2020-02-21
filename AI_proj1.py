@@ -110,6 +110,7 @@ def A_star(board, size):
         row, col = pos
         #print(path_heuristic)
 
+
         if(row == size-1 and col == size-1):
             end_time = timer()
             return (end_time - start_time), path_heuristic
@@ -131,6 +132,13 @@ def A_star(board, size):
             if(col - board[row][col] >= 0 and col - board[row][col] < size):
                 path_heuristic += visited[row][col-board[row][col]]
                 pri_queue.put((path_heuristic, (row, col - board[row][col])))
+
+def gen_algo(board, size, iterations):
+    p1 = board
+    p2 = gen_board
+
+
+
 
 
 def hill_climb(board, size, iterations):
@@ -234,6 +242,19 @@ def pboard(board, size, val_func):
     print("value function is: ", val_func)
 
 
+def gen_board(size):
+    grid = [[0] * size for i in range(size)]
+
+    for i in range(size):
+        for j in range(size):
+            if i == size-1 and j == size-1:
+                break
+            else:
+                max_move = max(size - (i+1), i, size - (j+1), j)
+                grid[i][j] = randint(1, max_move)
+    
+    return grid
+
 
 def build_GUI(grid_size):
     valid_sizes = [5, 7, 9, 11]
@@ -250,15 +271,7 @@ def build_GUI(grid_size):
 
     print('------------------------------------')
 
-    grid = [[0] * grid_size for i in range(grid_size)]
-
-    for i in range(grid_size):
-        for j in range(grid_size):
-            if i == grid_size-1 and j == grid_size-1:
-                break
-            else:
-                max_move = max(grid_size - (i+1), i, grid_size - (j+1), j)
-                grid[i][j] = randint(1, max_move)
+    grid = gen_board(grid_size)
 
     print('Original Board:')
     for i in range(grid_size):
