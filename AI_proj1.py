@@ -53,6 +53,12 @@ def main():
         print("Total execution time for spf with value function {} is: {} seconds".format(val, ex_time))
         print(path_length)
 
+    print('------------------------------------')
+    print('A* Results on board size of 5:')
+    for subboard, val in board_collection:
+        ex_time, path_length = A_star(subboard, 5)
+        print("Total execution time for A* with value function {} is: {} seconds".format(val, ex_time))
+
 
 
 
@@ -91,7 +97,40 @@ def spf(board, size):
                # path_length += board[row][col-board[row][col]]
                 pri_queue.put((path_length, (row, col - board[row][col])))
 
+def A_star(board, size):
+    visited = evaluate(board, size)[0]
+    start_time = timer()
+    pri_queue = queue.PriorityQueue(maxsize=0)
+    visited = [[False] * size for i in range(size)]
+    path_heuristic = 0
+    pri_queue.put((path_heuristic, (0, 0)))
 
+    while(pri_queue.empty() == False):
+        path_heuristic, pos = pri_queue.get()
+        row, col = pos
+        #print(path_heuristic)
+
+        if(row == size-1 and col == size-1):
+            end_time = timer()
+            return (end_time - start_time), path_heuristic
+            #return path_heuristic
+        
+        if(visited[row][col] == False):
+            visited[row][col] = True
+            path_heuristic += 1
+
+            if(col + board[row][col] >= 0 and col + board[row][col] < size):
+                path_heuristic += visited[row][col+board[row][col]]
+                pri_queue.put((path_heuristic, (row, col + board[row][col])))
+            if(row + board[row][col] >= 0 and row + board[row][col] < size):
+                path_heuristic += visited[row+board[row][col]][col]
+                pri_queue.put((path_heuristic, (row + board[row][col], col)))
+            if(row - board[row][col] >= 0 and row - board[row][col] < size):
+                path_heuristic += visited[row-board[row][col]][col]
+                pri_queue.put((path_heuristic, (row - board[row][col], col)))
+            if(col - board[row][col] >= 0 and col - board[row][col] < size):
+                path_heuristic += visited[row][col-board[row][col]]
+                pri_queue.put((path_heuristic, (row, col - board[row][col])))
 
 
 def hill_climb(board, size, iterations):
