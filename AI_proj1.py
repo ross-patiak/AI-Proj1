@@ -2,7 +2,7 @@ import os
 import sys
 import queue
 from random import randint
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 
 
 def main():
