@@ -4,6 +4,8 @@ import queue
 from random import randint
 import matplotlib.pyplot as plt 
 from timeit import default_timer as timer
+import copy
+
 
 def main():
     """
@@ -37,35 +39,40 @@ def main():
 #general demonstration of Hill Climb function AKA task 4 FOR ALL LEGAL BOARD SIZES
     print('------------------------------------')
     print('Hill Climb Result on board size of 5:')
-    board_collection, size, valfunc_max, x_vals, y_vals = hill_climb(board, grid_size, 50)
-    #hillboard, val_func = board_collection[len(board_collection)-1]
-    #pboard(hillboard, grid_size, val_func)
-    #graphit(x_vals, y_vals)
+    board_collection, size, valfunc_max, x_vals, y_vals = hill_climb(board, grid_size, 200)
+    hillboard, val_func = board_collection[-1]
+    pboard(hillboard, grid_size, val_func)
+    graphit(x_vals, y_vals)
 
-    print(board_collection)
-"""
+    #print(board_collection)
+
     print('------------------------------------')
-    print('SPF Result on board size of 5:')
-    spf(
+    print('SPF Results on board size of 5:')
+    for subboard, val in board_collection:
+        ex_time, path_length = spf(subboard, 5)
+        print("Total execution time for spf with value function {} is: {} seconds".format(val, ex_time))
+        print(path_length)
 
 
 
 
 
 def spf(board, size):
-    val_func = 0
+    start_time = timer()
     pri_queue = queue.PriorityQueue(maxsize=0)
     visited = [[False] * size for i in range(size)]
     path_length = 0
-    pri_queue.put((0, 0, path_length))
+    pri_queue.put((path_length, (0, 0)))
 
     while(pri_queue.empty() == False):
-        pos = pri_queue.get()
-        row, col, path_length = pos
+        path_length, pos = pri_queue.get()
+        row, col = pos
         #print(path_length)
 
         if(row == size-1 and col == size-1):
-            return path_length
+            end_time = timer()
+            return (end_time - start_time), path_length
+            #return path_length
         
         if(visited[row][col] == False):
             visited[row][col] = True
@@ -73,19 +80,19 @@ def spf(board, size):
 
             if(col + board[row][col] >= 0 and col + board[row][col] < size):
               # path_length += board[row][col+board[row][col]]
-                pri_queue.put((row, col + board[row][col], path_length))
+                pri_queue.put((path_length, (row, col + board[row][col])))
             if(row + board[row][col] >= 0 and row + board[row][col] < size):
                # path_length += board[row+board[row][col]][col]
-                pri_queue.put((row + board[row][col], col, path_length))
+                pri_queue.put((path_length, (row + board[row][col], col)))
             if(row - board[row][col] >= 0 and row - board[row][col] < size):
                # path_length += board[row-board[row][col]][col]
-                pri_queue.put((row - board[row][col], col, path_length))
+                pri_queue.put((path_length, (row - board[row][col], col)))
             if(col - board[row][col] >= 0 and col - board[row][col] < size):
                # path_length += board[row][col-board[row][col]]
-                pri_queue.put((row, col - board[row][col], path_length))
+                pri_queue.put((path_length, (row, col - board[row][col])))
 
 
-"""
+
 
 def hill_climb(board, size, iterations):
     start_time = timer()
@@ -94,7 +101,7 @@ def hill_climb(board, size, iterations):
 
     valfunc_og = evaluate(board, size)[1]
     valfunc_max = valfunc_og
-    board_collection = []
+    board_collection = [[copy.deepcopy(board), valfunc_og]]
 
     for i in range(len(x_vals)):
         #does this belong here? (are we modifying the og board everytime?)
@@ -125,12 +132,11 @@ def hill_climb(board, size, iterations):
                 new_board[rand_x][rand_y] = old_cell
             elif valfunc_new > valfunc_max:
                 valfunc_max = valfunc_new
-                final_board = new_board[:]
-                pboard(new_board, size, valfunc_new)
-                # board_collection.append((final_board, valfunc_max))
-                board_collection.append(final_board)
+                final_board = copy.deepcopy(new_board)
+               #pboard(final_board, size, valfunc_new)
+                board_collection.append([final_board, valfunc_new])
 
-                print(board_collection)
+                #print(board_collection)
 
         y_vals.append(valfunc_max)
     
