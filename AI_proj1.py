@@ -35,7 +35,7 @@ def main():
 #general demonstration of Hill Climb function AKA task 4 FOR ALL LEGAL BOARD SIZES
     print('------------------------------------')
     print('Hill Climb Result on board size of 5:')
-    board_collection, size, valfunc_max, x_vals, y_vals = hill_climb(board, grid_size, 200)
+    board_collection, size, valfunc_max, x_vals, y_vals = hill_climb(board, grid_size, 10)
     hillboard, val_func = board_collection[-1]
     pboard(hillboard, grid_size, val_func)
     graphit(x_vals, y_vals)
@@ -139,58 +139,56 @@ def A_star(board, size):
 def gen_algo(board, size, iterations):
     b_prime = board
     b_mates = []
+    num_mates = math.ceil((iterations+1)/2)
 
-    for i in range(math.ceil((iterations+1)/2)):
-        b_mates.append(b_prime)
-        b_mates.append(gen_board(size))
+    for i in range(num_mates):
+        if((iterations+1)%2 == 0):
+            b_mates.append(b_prime)
+            b_mates.append(gen_board(size))
+        else:
+            if(i == num_mates - 1):
+                b_mates.append(gen_board(size))
+            else:
+                b_mates.append(b_prime)
+                b_mates.append(gen_board(size))
 
     parents = b_mates
     children = []
+    for i in parents:
+        pboard(i, 5, 0)
+    #print(parents)
+    #print(children)
     
-    for i in range(iterations):
-        #if i%2 then im working w parents stack
-        if i%2 == 0:
-
-            #if theres an extra thing on stack2(this case: children), then make it a parent
-            if len(children) != 0:
-                parents.append(children[0])
+    
+    while len(parents) != 1:
 
             #if there are an EVEN number of parents, pop normally
-            if len(parents)%2==0:
-                while len(parents) != 0:
-                    c1 = parents.pop()
-                    c2 = parents.pop()
+        if len(parents)%2==0:
+            while len(parents) != 0:
+                c1 = parents.pop()
+                c2 = parents.pop()
                     
-                    children.append(merge(c1, c2, size))
-            #if there are an ODD number of parents, theres an extra parent
-            else:
-                while len(parents) != 1:
-                    c1 = parents.pop()
-                    c2 = parents.pop()
+                children.append(merge(c1, c2, size))
+                #print(parents)
+                #print(children)
+        #if there are an ODD number of parents, theres an extra parent
+        else:
+            while len(parents) != 1:
+                c1 = parents.pop()
+                c2 = parents.pop()
                     
-                    children.append(merge(c1, c2, size))
+                children.append(merge(c1, c2, size))
+            
+            #if theres an extra thing on stack1(this case: parents), then make it a child
+            children.append(parents[0])
+        
+        parents = copy.deepcopy(children)
+        children = []
+                #print(parents)
+                #print(children)
 
         #this case we are working with the children stack
-        else:
-
-            #if theres an extra thing on stack1(this case: parents), then make it a child
-            if len(parents) != 0:
-                children.append(parents[0])
-
-            #if there are an EVEN number of children, pop normally
-            if len(children)%2==0:
-                while len(children) != 0:
-                    p1 = children.pop()
-                    p2 = children.pop()
-                    
-                    parents.append(merge(p1, p2, size))
-            #if there are an ODD number of parents, theres an extra parent
-            else:
-                while len(children) != 1:
-                    p1 = children.pop()
-                    p2 = children.pop()
-                    
-                    parents.append(merge(c1, c2, size))
+        
     
     if parents != []:
         tmp = parents.pop()
@@ -218,15 +216,26 @@ def merge(c1, c2, size):
     c1_val = c1[c1_x][c1_y]
     c2_val = c2[c2_x][c2_y]
 
+    c1[c2_x][c2_y] = c2_val
+    c2[c1_x][c1_y] = c1_val
+
+    
+    tmp1 = evaluate(c1, size)
+    tmp2 = evaluate(c2, size)
     flip = randint(0, 1)
 
-    if flip == 0:
-        c1[c2_x][c2_y] = c2_val
+    # if flip == 0:
+    #     c1[c2_x][c2_y] = c2_val
 
+    #     return c1
+    # else:
+    #     c2[c1_x][c1_y] = c1_val
+
+    #     return c2
+    
+    if tmp1[1] > tmp2[1]:
         return c1
     else:
-        c2[c1_x][c1_y] = c1_val
-
         return c2
 
 
