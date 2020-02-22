@@ -133,7 +133,12 @@ def A_star(board, size):
 
 def gen_algo(board, size, iterations):
     b_prime = board
-    b_mates = [gen_board(size) for i in range(math.ceil((iterations+1)/2))]
+    b_mates = []
+
+    for i in range(math.ceil((iterations+1)/2))
+        b_mates.append(b_prime)
+        b_mates.append(gen_board(size))
+
     parents = b_mates
     children = []
     
