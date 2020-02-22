@@ -55,6 +55,11 @@ def main():
         ex_time, path_length = A_star(subboard, 5)
         print("Total execution time for A* with value function {} is: {} seconds".format(val, ex_time))
 
+    print('------------------------------------')
+    print('Genetic Algorithm Results on board size of 5:')
+    visited, val_func = gen_algo(subboard, 5, 200)
+    pboard(visited, 5, val_func)
+
 
 
 
@@ -135,7 +140,7 @@ def gen_algo(board, size, iterations):
     b_prime = board
     b_mates = []
 
-    for i in range(math.ceil((iterations+1)/2))
+    for i in range(math.ceil((iterations+1)/2)):
         b_mates.append(b_prime)
         b_mates.append(gen_board(size))
 
@@ -156,14 +161,14 @@ def gen_algo(board, size, iterations):
                     c1 = parents.pop()
                     c2 = parents.pop()
                     
-                    children.append(merge(c1, c2))
+                    children.append(merge(c1, c2, size))
             #if there are an ODD number of parents, theres an extra parent
             else:
                 while len(parents) != 1:
                     c1 = parents.pop()
                     c2 = parents.pop()
                     
-                    children.append(merge(c1, c2))
+                    children.append(merge(c1, c2, size))
 
         #this case we are working with the children stack
         else:
@@ -178,23 +183,23 @@ def gen_algo(board, size, iterations):
                     p1 = children.pop()
                     p2 = children.pop()
                     
-                    parents.append(merge(p1, p2))
+                    parents.append(merge(p1, p2, size))
             #if there are an ODD number of parents, theres an extra parent
             else:
                 while len(children) != 1:
                     p1 = children.pop()
                     p2 = children.pop()
                     
-                    parents.append(merge(c1, c2))
+                    parents.append(merge(c1, c2, size))
     
     if parents != []:
         tmp = parents.pop()
 
-        return evaluate(tmp)
+        return evaluate(tmp, size)
     elif children != []:
         tmp = children.pop()
 
-        return evaluate(tmp)
+        return evaluate(tmp, size)
 
 
 
