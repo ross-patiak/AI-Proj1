@@ -1,11 +1,7 @@
-import os
-import sys
-import queue
+import os, sys, queue, copy, math
 from random import randint
 import matplotlib.pyplot as plt 
 from timeit import default_timer as timer
-import copy
-
 
 def main():
     """
@@ -97,6 +93,7 @@ def spf(board, size):
                # path_length += board[row][col-board[row][col]]
                 pri_queue.put((path_length, (row, col - board[row][col])))
 
+
 def A_star(board, size):
     visited = evaluate(board, size)[0]
     start_time = timer()
@@ -133,12 +130,94 @@ def A_star(board, size):
                 path_heuristic += visited[row][col-board[row][col]]
                 pri_queue.put((path_heuristic, (row, col - board[row][col])))
 
+
 def gen_algo(board, size, iterations):
-    p1 = board
-    p2 = gen_board
+    b_prime = board
+    b_mates = [gen_board(size) for i in range(math.ceil((iterations+1)/2))]
+    parents = b_mates
+    children = []
+    
+    for i in range(iterations):
+        #if i%2 then im working w parents stack
+        if i%2 == 0:
+
+            #if theres an extra thing on stack2(this case: children), then make it a parent
+            if len(children) != 0:
+                parents.append(children[0])
+
+            #if there are an EVEN number of parents, pop normally
+            if len(parents)%2==0:
+                while len(parents) != 0:
+                    c1 = parents.pop()
+                    c2 = parents.pop()
+                    
+                    children.append(merge(c1, c2))
+            #if there are an ODD number of parents, theres an extra parent
+            else:
+                while len(parents) != 1:
+                    c1 = parents.pop()
+                    c2 = parents.pop()
+                    
+                    children.append(merge(c1, c2))
+
+        #this case we are working with the children stack
+        else:
+
+            #if theres an extra thing on stack1(this case: parents), then make it a child
+            if len(parents) != 0:
+                children.append(parents[0])
+
+            #if there are an EVEN number of children, pop normally
+            if len(children)%2==0:
+                while len(children) != 0:
+                    p1 = children.pop()
+                    p2 = children.pop()
+                    
+                    parents.append(merge(p1, p2))
+            #if there are an ODD number of parents, theres an extra parent
+            else:
+                while len(children) != 1:
+                    p1 = children.pop()
+                    p2 = children.pop()
+                    
+                    parents.append(merge(c1, c2))
+    
+    if parents != []:
+        tmp = parents.pop()
+
+        return evaluate(tmp)
+    elif children != []:
+        tmp = children.pop()
+
+        return evaluate(tmp)
 
 
 
+def merge(c1, c2, size):
+
+    while True:
+        c1_x = randint(0, size-1)
+        c1_y = randint(0, size-1)
+        c2_x = randint(0, size-1)
+        c2_y = randint(0, size-1)
+
+        if not(c1_x == size-1 and c1_y == size-1):
+            if not(c2_x == size-1 and c2_y == size-1):
+                break
+
+    c1_val = c1[c1_x][c1_y]
+    c2_val = c2[c2_x][c2_y]
+
+    flip = randint(0, 1)
+
+    if flip == 0:
+        c1[c2_x][c2_y] = c2_val
+
+        return c1
+    else:
+        c2[c1_x][c1_y] = c1_val
+
+        return c2
 
 
 def hill_climb(board, size, iterations):
